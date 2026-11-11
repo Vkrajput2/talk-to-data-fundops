@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talk to Data - Fund Operations Control Tower</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <a class="skip" href="#question">Skip to question box</a>
+  <header>
+    <h1>Fund Operations Control Tower</h1>
+    <div class="user">
+      <label for="user-select">Signed in as</label>
+      <select id="user-select"></select>
+      <button type="button" id="new-convo">New conversation</button>
+    </div>
+  </header>
+
+  <section aria-label="Example questions" class="examples">
+    <h2>Example questions</h2>
+    <div id="chips" class="chips"></div>
+  </section>
+
+  <main id="conversation" aria-live="polite" aria-relevant="additions" tabindex="-1">
+    <p class="hint" id="empty-hint">Ask a question in plain English. Every answer shows the tables used, why, the join keys and the exact SQL.</p>
+  </main>
+
+  <form id="ask-form" autocomplete="off">
+    <label for="question">Your question</label>
+    <div class="row">
+      <input id="question" name="question" type="text" maxlength="500" required placeholder="e.g. Which funds have less than 2% cash today?">
+      <button type="submit" id="ask-btn">Ask</button>
+    </div>
+    <p id="status" role="status" class="status"></p>
+  </form>
+
+  <footer>
+    <span id="model-info">Model: loading...</span>
+    <span id="asof-info"></span>
+    <span>Demo data is fictional; rows marked synthetic come from a generated supplement.</span>
+  </footer>
+  <script src="/static/app.js"></script>
+</body>
+</html>

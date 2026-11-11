@@ -1,0 +1,165 @@
+{
+ "Q1": [
+  {
+   "id": "Q1-p1",
+   "question": "Give me every active fund with its region, strategy and most recent assets under management"
+  },
+  {
+   "id": "Q1-p2",
+   "question": "Which funds are currently active, and what are their latest AUM figures with region and strategy?"
+  },
+  {
+   "id": "Q1-p3",
+   "question": "Show the fund list including domicile region, investment strategy and the newest AUM"
+  }
+ ],
+ "Q2": [
+  {
+   "id": "Q2-p1",
+   "question": "Which portfolios are holding less than 2% of their assets in available cash today?"
+  },
+  {
+   "id": "Q2-p2",
+   "question": "Identify funds whose cash balance is under two percent of net assets at the latest date"
+  },
+  {
+   "id": "Q2-p3",
+   "question": "Are any funds running low on cash relative to AUM right now (below 2%)?"
+  }
+ ],
+ "Q3": [
+  {
+   "id": "Q3-p1",
+   "question": "Give me yesterday's settlement fails with the broker and the reason"
+  },
+  {
+   "id": "Q3-p2",
+   "question": "Which trades did not settle on the last business day, and why?"
+  },
+  {
+   "id": "Q3-p3",
+   "question": "List the failed settlements from the latest settlement day with fund, security and counterparty"
+  }
+ ],
+ "Q4": [
+  {
+   "id": "Q4-p1",
+   "question": "How did yesterday's settlement rate compare to the four week average?"
+  },
+  {
+   "id": "Q4-p2",
+   "question": "Compare the share of trades settled yesterday with the trailing four-week rate"
+  },
+  {
+   "id": "Q4-p3",
+   "question": "What percentage of trades settled yesterday versus the 4-week average percentage?"
+  }
+ ],
+ "Q4F": [
+  {
+   "id": "Q4F-p1",
+   "question": "Split yesterday's failed trades by broker",
+   "setup": [
+    "Q4"
+   ]
+  },
+  {
+   "id": "Q4F-p2",
+   "question": "Which brokers are behind yesterday's settlement fails, with counts and value?",
+   "setup": [
+    "Q4"
+   ]
+  },
+  {
+   "id": "Q4F-p3",
+   "question": "Now show those fails grouped by counterparty broker",
+   "setup": [
+    "Q4"
+   ]
+  }
+ ],
+ "Q5": [
+  {
+   "id": "Q5-p1",
+   "question": "Which recon breaks are still open after more than five days, and who is responsible?"
+  },
+  {
+   "id": "Q5-p2",
+   "question": "Show unresolved reconciliation breaks older than 5 days with owner and custodian"
+  },
+  {
+   "id": "Q5-p3",
+   "question": "List aged open breaks (over five days) together with their owners"
+  }
+ ],
+ "Q6": [
+  {
+   "id": "Q6-p1",
+   "question": "Do we have any stale or missing prices today that might affect a fund's NAV?"
+  },
+  {
+   "id": "Q6-p2",
+   "question": "Which open pricing exceptions of two or more days relate to a NAV, and what is the NAV status?"
+  },
+  {
+   "id": "Q6-p3",
+   "question": "Show stale prices with the affected fund and its current NAV status"
+  }
+ ],
+ "Q7": [
+  {
+   "id": "Q7-p1",
+   "question": "How do this month's net flows per fund stack up against last month?"
+  },
+  {
+   "id": "Q7-p2",
+   "question": "Compare net subscriptions minus redemptions by fund for the current month and the previous month"
+  },
+  {
+   "id": "Q7-p3",
+   "question": "Net flow by fund: month to date versus prior month"
+  }
+ ],
+ "Q8": [
+  {
+   "id": "Q8-p1",
+   "question": "Why did management fee income for Global Equity Alpha change compared with the same month last year?"
+  },
+  {
+   "id": "Q8-p2",
+   "question": "Explain the year over year movement in Global Equity Alpha management fee revenue: assets or fee rate?"
+  },
+  {
+   "id": "Q8-p3",
+   "question": "What is driving the YoY revenue change for the Global Equity Alpha Fund?"
+  }
+ ],
+ "Q9": [
+  {
+   "id": "Q9-p1",
+   "question": "Which operational processes are close to missing their SLA right now?"
+  },
+  {
+   "id": "Q9-p2",
+   "question": "Show pending processes that have used at least 80% of their SLA time"
+  },
+  {
+   "id": "Q9-p3",
+   "question": "Any processes at risk of an SLA breach today?"
+  }
+ ],
+ "Q10": [
+  {
+   "id": "Q10-p1",
+   "question": "Which funds should we prioritise today and why?"
+  },
+  {
+   "id": "Q10-p2",
+   "question": "Give me a management summary of the three funds needing most attention"
+  },
+  {
+   "id": "Q10-p3",
+   "question": "Which three funds need attention today? Score them using fails, breaks, cash, prices, SLA, NAV and outflows"
+  }
+ ]
+}

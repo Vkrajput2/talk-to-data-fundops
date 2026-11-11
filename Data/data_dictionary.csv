@@ -1,0 +1,105 @@
+table,column,type,key,description
+dim_fund,fund_id,TEXT,PK,Fund identifier
+dim_fund,fund_name,TEXT,,Fund name
+dim_fund,strategy,TEXT,,Investment strategy
+dim_fund,region,TEXT,,Domicile / mandate region
+dim_fund,base_ccy,TEXT,,Fund base currency
+dim_fund,benchmark,TEXT,,Benchmark index
+dim_fund,inception_date,DATE,,Fund launch date
+dim_fund,target_aum_bn,NUMBER,,Reference AUM in bn (seed)
+dim_security,security_id,TEXT,PK,Security identifier
+dim_security,isin,TEXT,,ISIN
+dim_security,security_name,TEXT,,Security name
+dim_security,asset_class,TEXT,,Equity / Government Bond / Corporate Bond
+dim_security,ccy,TEXT,,Trading currency
+dim_security,issuer,TEXT,,Issuer name
+dim_counterparty,cp_id,TEXT,PK,Counterparty identifier
+dim_counterparty,cp_name,TEXT,,Broker or custodian name
+dim_counterparty,cp_type,TEXT,,Broker / Custodian
+dim_date,date,DATE,PK,Calendar date
+dim_date,year,NUMBER,,Year
+dim_date,month,NUMBER,,Month
+dim_date,day,NUMBER,,Day
+dim_date,weekday,TEXT,,Day name
+dim_date,is_business_day,NUMBER,,1=business day
+dim_date,quarter,TEXT,,Calendar quarter
+fact_transaction,txn_id,TEXT,PK,Trade identifier
+fact_transaction,fund_id,TEXT,FK dim_fund,Fund
+fact_transaction,security_id,TEXT,FK dim_security,Security
+fact_transaction,security_name,TEXT,,Security name (denorm)
+fact_transaction,asset_class,TEXT,,Asset class
+fact_transaction,side,TEXT,,BUY / SELL
+fact_transaction,quantity,NUMBER,,Units / nominal
+fact_transaction,price,NUMBER,,Trade price
+fact_transaction,gross_amount,NUMBER,,Trade cash value (fund ccy)
+fact_transaction,ccy,TEXT,,Fund base currency
+fact_transaction,broker_id,TEXT,FK dim_counterparty,Executing broker
+fact_transaction,broker_name,TEXT,,Broker name (denorm)
+fact_transaction,trade_date,DATE,,Trade date
+fact_transaction,settlement_date,DATE,,Contractual settlement date
+fact_settlement,settle_id,TEXT,PK,Settlement record
+fact_settlement,txn_id,TEXT,FK fact_transaction,Parent trade
+fact_settlement,fund_id,TEXT,FK dim_fund,Fund
+fact_settlement,settlement_date,DATE,,Settlement date
+fact_settlement,status,TEXT,,Settled / Failed / Pending
+fact_settlement,broker_id,TEXT,FK,Broker
+fact_settlement,broker_name,TEXT,,Broker name
+fact_settlement,fail_reason_code,TEXT,,ISO-style fail code when Failed
+fact_settlement,fail_reason_text,TEXT,,Human-readable fail reason
+fact_nav,fund_id,TEXT,FK dim_fund,Fund
+fact_nav,nav_date,DATE,,NAV date
+fact_nav,total_net_assets,NUMBER,,Net assets (fund ccy)
+fact_nav,units,NUMBER,,Units in issue
+fact_nav,nav_per_unit,NUMBER,,NAV per unit
+fact_nav,dod_variance_pct,NUMBER,,Day-on-day NAV move %
+fact_nav,nav_status,TEXT,,Final / Under Review
+fact_nav,ccy,TEXT,,Fund currency
+fact_cash_balance,fund_id,TEXT,FK dim_fund,Fund
+fact_cash_balance,balance_date,DATE,,Balance date
+fact_cash_balance,available_balance,NUMBER,,Available cash (fund ccy)
+fact_cash_balance,total_net_assets,NUMBER,,AUM for the day
+fact_cash_balance,cash_pct_aum,NUMBER,,Available cash as % of AUM
+fact_cash_balance,ccy,TEXT,,Fund currency
+fact_flows,flow_id,TEXT,PK,Flow record
+fact_flows,fund_id,TEXT,FK dim_fund,Fund
+fact_flows,month,TEXT,,YYYY-MM
+fact_flows,subscriptions,NUMBER,,Subscriptions (+)
+fact_flows,redemptions,NUMBER,,Redemptions (-)
+fact_flows,net_flow,NUMBER,,Subs + Reds
+fact_flows,ccy,TEXT,,Fund currency
+fact_recon_break,break_id,TEXT,PK,Break identifier
+fact_recon_break,fund_id,TEXT,FK dim_fund,Fund
+fact_recon_break,break_type,TEXT,,Cash / Position
+fact_recon_break,break_amount,NUMBER,,Break value (fund ccy)
+fact_recon_break,ccy,TEXT,,Currency
+fact_recon_break,age_days,NUMBER,,Age in days
+fact_recon_break,status,TEXT,,Open / Resolved
+fact_recon_break,owner,TEXT,,Accountable owner
+fact_recon_break,custodian,TEXT,,Source custodian
+fact_recon_break,security_id,TEXT,FK dim_security,Security
+fact_recon_break,open_date,DATE,,Break open date
+fact_pricing_exception,pex_id,TEXT,PK,Exception identifier
+fact_pricing_exception,security_id,TEXT,FK dim_security,Security
+fact_pricing_exception,security_name,TEXT,,Security name
+fact_pricing_exception,fund_id,TEXT,FK dim_fund,Affected fund
+fact_pricing_exception,exception_type,TEXT,,Stale / Missing / Suspect
+fact_pricing_exception,stale_days,NUMBER,,Days stale/missing
+fact_pricing_exception,price_source,TEXT,,Vendor / source
+fact_pricing_exception,status,TEXT,,Open / Resolved
+fact_pricing_exception,as_of_date,DATE,,As-of date
+fact_revenue,rev_id,TEXT,PK,Revenue record
+fact_revenue,fund_id,TEXT,FK dim_fund,Fund
+fact_revenue,month,TEXT,,YYYY-MM
+fact_revenue,mgmt_fee_revenue,NUMBER,,Monthly management fee revenue
+fact_revenue,avg_aum,NUMBER,,Average AUM in month
+fact_revenue,fee_rate_pct,NUMBER,,Effective annual fee rate %
+fact_revenue,expense_ratio,NUMBER,,Expense ratio %
+fact_revenue,ccy,TEXT,,Fund currency
+fact_sla,sla_id,TEXT,PK,SLA record
+fact_sla,fund_id,TEXT,FK dim_fund,Fund
+fact_sla,process,TEXT,,Operational process
+fact_sla,target_minutes,NUMBER,,SLA target (min)
+fact_sla,elapsed_minutes,NUMBER,,Elapsed (min)
+fact_sla,pct_of_sla,NUMBER,,Elapsed as % of target
+fact_sla,status,TEXT,,Pending / Completed
+fact_sla,as_of_date,DATE,,As-of date

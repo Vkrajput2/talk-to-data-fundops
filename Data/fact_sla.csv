@@ -1,0 +1,7 @@
+sla_id,fund_id,process,target_minutes,elapsed_minutes,pct_of_sla,status,as_of_date
+SLA001,F003,NAV Publication,180,162,90.0,Pending,2026-09-04
+SLA002,F004,Break Resolution,240,206,86.0,Pending,2026-09-04
+SLA003,F002,Trade Confirmation,120,70,58.0,Pending,2026-09-04
+SLA004,F001,NAV Publication,180,150,83.0,Completed,2026-09-04
+SLA005,F005,Pricing Sign-off,150,95,63.0,Pending,2026-09-04
+SLA006,F006,Cash Reconciliation,90,40,44.0,Completed,2026-09-04

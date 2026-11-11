@@ -1,0 +1,5 @@
+pex_id,security_id,security_name,fund_id,exception_type,stale_days,price_source,status,as_of_date
+PX001,S05,Bharat Infra Ltd,F005,Missing,3,Vendor A,Open,2026-09-04
+PX002,S04,Sakura Mobility Corp,F003,Stale,2,Vendor B,Open,2026-09-04
+PX003,S09,Helvetia Bank 6.0% 2033,F002,Suspect,2,Vendor A,Open,2026-09-04
+PX004,S01,Apex Technologies Inc,F001,Stale,1,Vendor B,Resolved,2026-09-04

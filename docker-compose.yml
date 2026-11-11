@@ -1,0 +1,12 @@
+services:
+  talk-to-data:
+    build: .
+    image: talk-to-data:local
+    env_file: .env          # copy .env.example to .env and set LLM_API_KEY (never commit .env)
+    ports:
+      - "8000:8000"
+    volumes:
+      - msim-data:/data     # SQLite file; rebuilt from the CSVs when the data changes
+    restart: unless-stopped
+volumes:
+  msim-data:

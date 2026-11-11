@@ -1,0 +1,48 @@
+name: Deploy to Azure Container Apps (manual)
+
+# Manual only. Needs repository secrets AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID, LLM_API_KEY and
+# repository variables AZURE_RESOURCE_GROUP, AZURE_ACR_NAME, AZURE_CONTAINER_APP, AZURE_LOCATION (see docs/azure-deploy.md).
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: Image tag to build and deploy
+        required: false
+        default: latest
+
+permissions:
+  contents: read
+  id-token: write   # OIDC token for azure/login (no stored Azure credentials)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: azure
+    steps:
+      - uses: actions/checkout@v4
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Build and push image to ACR
+        run: |
+          az acr build --registry "${{ vars.AZURE_ACR_NAME }}" \
+            --image "talk-to-data:${{ inputs.image_tag }}" .
+      - name: Deploy infrastructure and app (Bicep)
+        run: |
+          az deployment group create \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --template-file infra/azure/main.bicep \
+            --parameters \
+              location="${{ vars.AZURE_LOCATION }}" \
+              acrName="${{ vars.AZURE_ACR_NAME }}" \
+              appName="${{ vars.AZURE_CONTAINER_APP }}" \
+              imageTag="${{ inputs.image_tag }}" \
+              llmApiKey="${{ secrets.LLM_API_KEY }}"
+      - name: Print the app URL
+        run: |
+          az containerapp show --name "${{ vars.AZURE_CONTAINER_APP }}" \
+            --resource-group "${{ vars.AZURE_RESOURCE_GROUP }}" \
+            --query properties.configuration.ingress.fqdn -o tsv

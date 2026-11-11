@@ -1,0 +1,53 @@
+{
+  "tight_cash": {"table": "fact_cash_balance", "predicate": "cash_pct_aum < 2.0"},
+  "aged_break": {"table": "fact_recon_break", "predicate": "status = 'Open' AND age_days > 5"},
+  "sla_risk": {"table": "fact_sla", "predicate": "status = 'Pending' AND pct_of_sla >= 80"},
+  "stale_price": {"table": "fact_pricing_exception", "predicate": "status = 'Open' AND stale_days >= 2"},
+  "failed_settlement": {"table": "fact_settlement", "predicate": "status = 'Failed'"},
+  "nav_under_review": {"table": "fact_nav", "predicate": "nav_status = 'Under Review'"},
+  "settlement_rate": "100.0 * SUM(status='Settled') / COUNT(*) per settlement_date; the 4-week baseline is pooled over the 28-day window ending at the as-of date, inclusive",
+  "attention_weights": {"fails": 3, "aged_breaks": 2, "low_cash": 2, "pricing_exceptions": 2, "sla_risk": 1, "nav_under_review": 2, "outflow": 2},
+  "outflow_threshold": -100000000,
+  "open_break_on_date": "open_date <= :d AND ((status = 'Open' AND resolved_date IS NULL) OR resolved_date > :d)",
+  "sla_breach": "fact_sla_history.breached = 1 (elapsed_minutes > target_minutes); adherence rate = 1 - AVG(breached)",
+  "fx": {
+    "table": "dim_fx_rate",
+    "convention": "convert at the rate row where rate_date = the AS_OF date; usd_amount = amount * usd_rate",
+    "use_only_when": "the question asks for a combined, total, or USD-equivalent figure across currencies"
+  },
+  "fund_name_normalisation": {"strip_prefix": "MS ", "strip_suffix": " Fund"},
+  "extra_aliases": {"short": "LACK"},
+  "sql_rules": [
+    "SQLite dialect only; one SELECT or WITH ... SELECT; no semicolon.",
+    "Join facts to dim_fund on fund_id, never on names; use the join graph ON clauses given above.",
+    "Never hardcode 'today', 'yesterday' or month literals you computed yourself: copy the dates from the date context, or anchor on MAX(<date column>) of the table for snapshots.",
+    "Use the glossary predicates exactly (tight cash, aged break, SLA risk, stale price, failed settlement, settlement rate).",
+    "Round percentages and ratios with ROUND(x, 1) (or 2 for cash percentages); never return values like 0.35000000000000003.",
+    "Alias every table and every computed column; qualify every column when more than one table is used.",
+    "Add ORDER BY for rankings, top-N and 'latest' questions, with a deterministic tie-break.",
+    "Select ccy next to any amount. Never SUM amounts across currencies without grouping by ccy, unless the question asks for a combined figure (next rule).",
+    "If the question asks for a combined, total or USD-equivalent figure across currencies, join dim_fx_rate fx ON fx.ccy = t.ccy AND fx.rate_date = '<as_of>' and multiply by fx.usd_rate. Otherwise do not join it.",
+    "Division: use 100.0 * or CAST(... AS REAL) to avoid integer division; guard divisors with NULLIF.",
+    "Month columns in fact_flows/fact_revenue are text 'YYYY-MM'; never join them to dim_date.month.",
+    "Rows with is_synthetic = 1 are demo data; do not filter on it unless the user asks.",
+    "Only these SQLite functions are allowed: abs, avg, coalesce, count, date, datetime, group_concat, ifnull, iif, instr, julianday, length, lower, max, min, nullif, printf, replace, round, strftime, substr, sum, total, trim, upper, row_number, rank, lag, lead."
+  ],
+  "table_roles": {
+    "dim_fund": "Fund master data: names, region, strategy, base currency",
+    "dim_security": "Security reference data",
+    "dim_counterparty": "Brokers and custodians",
+    "dim_date": "Business calendar",
+    "fact_transaction": "Executed trades with value, broker and security",
+    "fact_settlement": "Settlement status per trade, including fail reason and broker",
+    "fact_nav": "Daily net assets (AUM), NAV per unit and NAV status per fund",
+    "fact_cash_balance": "Available cash and cash as a percent of AUM per fund per day",
+    "fact_flows": "Monthly subscriptions, redemptions and net flows per fund",
+    "fact_recon_break": "Reconciliation breaks with age, owner, custodian and status",
+    "fact_pricing_exception": "Stale, missing or suspect security prices per fund",
+    "fact_revenue": "Monthly management-fee revenue, average AUM and fee rate",
+    "fact_sla": "Current operational SLA records per fund and process",
+    "fact_flow_detail": "Individual subscription and redemption flows by investor type (synthetic)",
+    "fact_sla_history": "Completed SLA records for past days with a breached flag (synthetic)",
+    "dim_fx_rate": "Fixed synthetic FX rates to USD"
+  }
+}

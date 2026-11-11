@@ -1,0 +1,11 @@
+break_id,fund_id,break_type,break_amount,ccy,age_days,status,owner,custodian,security_id,open_date
+BRK001,F004,Position,720000,USD,13,Open,R. Alvarez,State Street Custody,S06,2026-08-25
+BRK002,F002,Cash,940000,EUR,9,Open,M. Chen,BNP Paribas Securities Svc,S08,2026-08-29
+BRK003,F004,Cash,510000,USD,8,Open,R. Alvarez,State Street Custody,S11,2026-08-30
+BRK004,F002,Cash,720000,EUR,6,Open,M. Chen,BNP Paribas Securities Svc,S07,2026-09-01
+BRK005,F001,Position,280000,USD,4,Open,S. Kulkarni,Northern Trust Custody,S01,2026-09-03
+BRK006,F006,Cash,190000,GBP,3,Open,P. Nair,Northern Trust Custody,S10,2026-09-04
+BRK007,F003,Position,130000,USD,2,Open,D. Osei,State Street Custody,S04,2026-09-05
+BRK008,F005,Cash,96000,USD,1,Open,A. Menon,Northern Trust Custody,S05,2026-09-06
+BRK009,F001,Cash,210000,USD,15,Resolved,S. Kulkarni,Northern Trust Custody,S02,2026-08-23
+BRK010,F003,Cash,150000,USD,20,Resolved,D. Osei,State Street Custody,S03,2026-08-18

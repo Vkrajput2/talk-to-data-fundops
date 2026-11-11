@@ -1,0 +1,17 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# local artefacts
+*.db
+*.db-journal
+*.tmp
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# agent scratch (planning/review notes are not part of the product)
+.agents/
+.kiro/

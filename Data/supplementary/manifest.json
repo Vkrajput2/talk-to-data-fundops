@@ -1,0 +1,55 @@
+{
+  "files": {
+    "data_dictionary_supplementary.csv": {
+      "sha256": "3e1ec2cea3eaf4e2081292a8be14064823fc4f0e3d3bb49074eda8fc44216c85"
+    },
+    "dim_date.csv": {
+      "rows": 208,
+      "sha256": "348db8681e9c9baf2aa2b58b81530302a3f822cc05c65796048656b864e0b8fe"
+    },
+    "dim_fx_rate.csv": {
+      "rows": 249,
+      "sha256": "b4736347d5215adf57db2d911223578ccc64ed7a8cff65dc57f4e0e0711847b5"
+    },
+    "fact_cash_balance.csv": {
+      "rows": 104,
+      "sha256": "edb2fe08caec7e66482532249b4e9cffe79e61d3bfebddfd5e24029cf88c81ee"
+    },
+    "fact_flow_detail.csv": {
+      "rows": 263,
+      "sha256": "4eeca8eedc508f419aef738962cae02f999065b2de1bef30a5d341911d0ccb71"
+    },
+    "fact_flows.csv": {
+      "rows": 18,
+      "sha256": "7a6de80c7aa930e5ea79b8d29380aab6b7dcf35f4429785adc7aff94efe1871d"
+    },
+    "fact_nav.csv": {
+      "rows": 104,
+      "sha256": "d24fe772620d178c29f7dc771d3bd1abf8cb01cd67bcdb166b2e301b0dac3c03"
+    },
+    "fact_recon_break.csv": {
+      "rows": 24,
+      "sha256": "15964c43f2f5925e8f77360e8d157cd81afce22ace89ebc8d3806dd9c5bda966"
+    },
+    "fact_revenue.csv": {
+      "rows": 72,
+      "sha256": "87296f49a492520ee07d9b6d5b0961c4e099161cb952c152cbea29e5da75d7d6"
+    },
+    "fact_sla_history.csv": {
+      "rows": 570,
+      "sha256": "3f91d0c5c1d327dd989b5ed33e00dc1327184b79c06b478dc9892223e3aec660"
+    }
+  },
+  "inserted": {
+    "dim_date": 208,
+    "dim_fx_rate": 249,
+    "fact_cash_balance": 104,
+    "fact_flow_detail": 263,
+    "fact_flows": 18,
+    "fact_nav": 104,
+    "fact_recon_break": 24,
+    "fact_revenue": 72,
+    "fact_sla_history": 570
+  },
+  "seed": 20260904
+}

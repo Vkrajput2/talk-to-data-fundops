@@ -1,0 +1,7 @@
+fund_id,fund_name,strategy,region,base_ccy,benchmark,inception_date,target_aum_bn
+F001,MS Global Equity Alpha Fund,Global Equity,Global,USD,MSCI World,2016-03-01,5.12
+F002,MS EMEA Fixed Income Fund,Fixed Income,EMEA,EUR,Bloomberg Euro Agg,2018-06-15,2.34
+F003,MS Asia Multi-Asset Fund,Multi-Asset,APAC,USD,50/50 MSCI AC Asia/JPM Asia,2019-09-01,1.87
+F004,MS US Core Bond Fund,Fixed Income,US,USD,Bloomberg US Agg,2015-01-10,3.05
+F005,MS Emerging Markets Equity Fund,Emerging Equity,Global,USD,MSCI EM,2017-11-20,1.02
+F006,MS Sustainable Global Credit Fund,Credit,Global,GBP,Bloomberg Global Agg Credit,2022-04-05,1.45

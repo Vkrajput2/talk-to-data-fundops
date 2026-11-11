@@ -1,0 +1,311 @@
+[
+ {
+  "id": "Q1",
+  "question": "List all active funds with region, strategy and latest AUM",
+  "sql": "SELECT f.fund_id, f.fund_name, f.region, f.strategy, ROUND(n.total_net_assets/1e9,2) AS aum_bn, f.base_ccy\nFROM dim_fund f JOIN fact_nav n ON f.fund_id = n.fund_id\nWHERE n.nav_date = (SELECT MAX(nav_date) FROM fact_nav)\nORDER BY aum_bn DESC",
+  "tables": [
+   "dim_fund",
+   "fact_nav"
+  ],
+  "intent": "lookup",
+  "pattern": false
+ },
+ {
+  "id": "Q2",
+  "question": "Which funds have available cash below 2% of AUM today?",
+  "sql": "SELECT f.fund_name, ROUND(c.cash_pct_aum,2) AS cash_pct_aum,\n       c.available_balance, c.ccy\nFROM fact_cash_balance c JOIN dim_fund f ON c.fund_id=f.fund_id\nWHERE c.balance_date='{as_of}' AND c.cash_pct_aum < 2.0\nORDER BY c.cash_pct_aum ASC;",
+  "tables": [
+   "fact_cash_balance",
+   "dim_fund"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "Q3",
+  "question": "Show all trades that failed to settle yesterday",
+  "sql": "SELECT f.fund_name, t.security_name, t.asset_class, s.broker_name,\n       s.fail_reason_code, s.fail_reason_text,\n       t.gross_amount AS value, t.ccy\nFROM fact_settlement s\nJOIN fact_transaction t ON s.txn_id=t.txn_id\nJOIN dim_fund f ON s.fund_id=f.fund_id\nWHERE s.settlement_date='{yesterday}' AND s.status='Failed'\nORDER BY t.gross_amount DESC;",
+  "tables": [
+   "fact_settlement",
+   "fact_transaction",
+   "dim_fund"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "Q4",
+  "question": "What is our settlement rate yesterday versus the four-week average?",
+  "sql": "WITH daily AS (\n SELECT settlement_date d, SUM(status='Settled') settled, COUNT(*) total\n FROM fact_settlement GROUP BY settlement_date)\nSELECT ROUND(100.0*(SELECT settled FROM daily WHERE d='{yesterday}')\n                  /(SELECT total   FROM daily WHERE d='{yesterday}'),1) AS rate_yesterday_pct,\n       ROUND(100.0*SUM(settled)/SUM(total),1) AS rate_4wk_avg_pct\nFROM daily;",
+  "tables": [
+   "fact_settlement"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "Q4F",
+  "question": "Break yesterday's fails down by broker",
+  "sql": "SELECT s.broker_name, COUNT(*) AS fails, SUM(t.gross_amount) AS fail_value\nFROM fact_settlement s JOIN fact_transaction t ON s.txn_id=t.txn_id\nWHERE s.settlement_date='{yesterday}' AND s.status='Failed'\nGROUP BY s.broker_name ORDER BY fails DESC;",
+  "tables": [
+   "fact_settlement",
+   "fact_transaction"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "Q5",
+  "question": "Which reconciliation breaks are open and older than five days, and who owns them?",
+  "sql": "SELECT b.break_id, f.fund_name, b.break_type, b.break_amount, b.ccy,\n       b.age_days, b.owner, b.custodian\nFROM fact_recon_break b JOIN dim_fund f ON b.fund_id=f.fund_id\nWHERE b.status='Open' AND b.age_days>5\nORDER BY b.age_days DESC, b.break_amount DESC;",
+  "tables": [
+   "fact_recon_break",
+   "dim_fund"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "Q6",
+  "question": "Are there any stale prices today that could put a NAV at risk?",
+  "sql": "SELECT p.security_name, p.exception_type, p.stale_days, p.price_source,\n       f.fund_name, n.nav_status, n.dod_variance_pct\nFROM fact_pricing_exception p\nJOIN dim_fund f ON p.fund_id=f.fund_id\nJOIN fact_nav n ON n.fund_id=f.fund_id AND n.nav_date='{nav_date}'\nWHERE p.status='Open' AND p.stale_days>=2\nORDER BY p.stale_days DESC;",
+  "tables": [
+   "fact_pricing_exception",
+   "dim_fund",
+   "fact_nav"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "Q7",
+  "question": "Show this month's net flows by fund and how they compare with last month",
+  "sql": "SELECT f.fund_name,\n       MAX(CASE WHEN fl.month='{current_month}' THEN fl.net_flow END) AS net_flow_mtd,\n       MAX(CASE WHEN fl.month='{previous_month}' THEN fl.net_flow END) AS net_flow_prior,\n       fl.ccy\nFROM fact_flows fl JOIN dim_fund f ON fl.fund_id=f.fund_id\nGROUP BY f.fund_name\nORDER BY MAX(CASE WHEN fl.month='{current_month}' THEN fl.net_flow END) ASC;",
+  "tables": [
+   "fact_flows",
+   "dim_fund"
+  ],
+  "intent": "trend",
+  "pattern": false
+ },
+ {
+  "id": "Q8",
+  "question": "What drove the year-on-year change in management-fee revenue for the Global Equity Alpha Fund?",
+  "sql": "WITH r AS (SELECT month, mgmt_fee_revenue rev, avg_aum, fee_rate_pct FROM fact_revenue WHERE fund_id='F001')\nSELECT (SELECT rev FROM r WHERE month='{rev_cur}') AS rev_current, (SELECT rev FROM r WHERE month='{rev_prior}') AS rev_prior,\n ROUND(100.0*((SELECT rev FROM r WHERE month='{rev_cur}')-(SELECT rev FROM r WHERE month='{rev_prior}'))/(SELECT rev FROM r WHERE month='{rev_prior}'),1) AS rev_yoy_pct,\n ROUND(100.0*((SELECT avg_aum FROM r WHERE month='{rev_cur}')-(SELECT avg_aum FROM r WHERE month='{rev_prior}'))/(SELECT avg_aum FROM r WHERE month='{rev_prior}'),1) AS avg_aum_yoy_pct,\n (SELECT fee_rate_pct FROM r WHERE month='{rev_prior}') AS fee_rate_prior, (SELECT fee_rate_pct FROM r WHERE month='{rev_cur}') AS fee_rate_current",
+  "tables": [
+   "fact_revenue"
+  ],
+  "intent": "insight",
+  "pattern": true
+ },
+ {
+  "id": "Q9",
+  "question": "Which operational processes are at risk of breaching SLA today?",
+  "sql": "SELECT f.fund_name, s.process, s.pct_of_sla, s.status\nFROM fact_sla s JOIN dim_fund f ON s.fund_id=f.fund_id\nWHERE s.status='Pending' AND s.pct_of_sla>=80\nORDER BY s.pct_of_sla DESC;",
+  "tables": [
+   "fact_sla",
+   "dim_fund"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "Q10",
+  "question": "Which three funds need attention today, and why?",
+  "sql": "WITH fails AS (SELECT fund_id,COUNT(*) c FROM fact_settlement WHERE settlement_date='{yesterday}' AND status='Failed' GROUP BY fund_id),\n aged AS (SELECT fund_id,COUNT(*) c FROM fact_recon_break WHERE status='Open' AND age_days>5 GROUP BY fund_id),\n lowcash AS (SELECT fund_id,1 c FROM fact_cash_balance WHERE balance_date='{as_of}' AND cash_pct_aum<2.0),\n px AS (SELECT fund_id,COUNT(*) c FROM fact_pricing_exception WHERE status='Open' AND stale_days>=2 GROUP BY fund_id),\n slar AS (SELECT fund_id,1 c FROM fact_sla WHERE status='Pending' AND pct_of_sla>=80),\n navr AS (SELECT fund_id,1 c FROM fact_nav WHERE nav_date='{as_of}' AND nav_status='Under Review'),\n outfl AS (SELECT fund_id,1 c FROM fact_flows WHERE month='{current_month}' AND net_flow<=-100000000)\nSELECT f.fund_name,\n   (3*COALESCE(fails.c,0)+2*COALESCE(aged.c,0)+2*COALESCE(lowcash.c,0)+2*COALESCE(px.c,0)\n     +1*COALESCE(slar.c,0)+2*COALESCE(navr.c,0)+2*COALESCE(outfl.c,0)) AS attention_score\nFROM dim_fund f\nLEFT JOIN fails ON f.fund_id=fails.fund_id LEFT JOIN aged ON f.fund_id=aged.fund_id\nLEFT JOIN lowcash ON f.fund_id=lowcash.fund_id LEFT JOIN px ON f.fund_id=px.fund_id\nLEFT JOIN slar ON f.fund_id=slar.fund_id LEFT JOIN navr ON f.fund_id=navr.fund_id\nLEFT JOIN outfl ON f.fund_id=outfl.fund_id\nORDER BY attention_score DESC LIMIT 3;",
+  "tables": [
+   "dim_fund",
+   "fact_settlement",
+   "fact_recon_break",
+   "fact_cash_balance",
+   "fact_pricing_exception",
+   "fact_sla",
+   "fact_nav",
+   "fact_flows"
+  ],
+  "intent": "summary",
+  "pattern": true
+ },
+ {
+  "id": "B12",
+  "question": "Which funds hold more than 3% of their assets in cash today",
+  "sql": "SELECT f.fund_name, ROUND(c.cash_pct_aum,2) AS cash_pct_aum, c.available_balance, c.ccy\nFROM fact_cash_balance c JOIN dim_fund f ON c.fund_id = f.fund_id\nWHERE c.balance_date = '{cash_date}' AND c.cash_pct_aum > 3.0 ORDER BY c.cash_pct_aum DESC",
+  "tables": [
+   "fact_cash_balance",
+   "dim_fund"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B13",
+  "question": "How many trades settled and failed for each broker yesterday",
+  "sql": "SELECT s.broker_name, SUM(s.status = 'Settled') AS settled, SUM(s.status = 'Failed') AS failed, COUNT(*) AS total\nFROM fact_settlement s WHERE s.settlement_date = '{yesterday}' GROUP BY s.broker_name ORDER BY failed DESC, s.broker_name",
+  "tables": [
+   "fact_settlement"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B14",
+  "question": "List the open pricing exceptions with the affected fund",
+  "sql": "SELECT p.security_name, p.exception_type, p.stale_days, f.fund_name\nFROM fact_pricing_exception p JOIN dim_fund f ON p.fund_id = f.fund_id\nWHERE p.status = 'Open' ORDER BY p.stale_days DESC, p.security_name",
+  "tables": [
+   "fact_pricing_exception",
+   "dim_fund"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "B15",
+  "question": "Show the NAV status and day on day move of each fund today",
+  "sql": "SELECT f.fund_name, n.nav_status, n.dod_variance_pct, n.nav_per_unit, n.ccy\nFROM fact_nav n JOIN dim_fund f ON n.fund_id = f.fund_id\nWHERE n.nav_date = '{nav_date}' ORDER BY f.fund_name",
+  "tables": [
+   "fact_nav",
+   "dim_fund"
+  ],
+  "intent": "lookup",
+  "pattern": false
+ },
+ {
+  "id": "B16",
+  "question": "What were total subscriptions and redemptions per fund last month",
+  "sql": "SELECT f.fund_name, fl.subscriptions, fl.redemptions, fl.net_flow, fl.ccy\nFROM fact_flows fl JOIN dim_fund f ON fl.fund_id = f.fund_id\nWHERE fl.month = '{previous_month}' ORDER BY f.fund_name",
+  "tables": [
+   "fact_flows",
+   "dim_fund"
+  ],
+  "intent": "lookup",
+  "pattern": false
+ },
+ {
+  "id": "B17",
+  "question": "Which broker has the most failed settlements in the last 4 weeks",
+  "sql": "SELECT s.broker_name, COUNT(*) AS fails FROM fact_settlement s\nWHERE s.status = 'Failed' AND s.settlement_date BETWEEN '{four_week_start}' AND '{as_of}'\nGROUP BY s.broker_name ORDER BY fails DESC, s.broker_name LIMIT 1",
+  "tables": [
+   "fact_settlement"
+  ],
+  "intent": "insight",
+  "pattern": false
+ },
+ {
+  "id": "B18",
+  "question": "How many open reconciliation breaks does each owner have",
+  "sql": "SELECT b.owner, COUNT(*) AS open_breaks, SUM(b.break_amount) AS open_value\nFROM fact_recon_break b WHERE b.status = 'Open' GROUP BY b.owner ORDER BY open_breaks DESC, b.owner",
+  "tables": [
+   "fact_recon_break"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B19",
+  "question": "Show total net assets for the US Core Bond fund over the last 5 business days",
+  "sql": "SELECT n.nav_date, n.total_net_assets, n.ccy FROM fact_nav n\nWHERE n.fund_id = 'F004' AND n.nav_date <= '{as_of}' ORDER BY n.nav_date DESC LIMIT 5",
+  "tables": [
+   "fact_nav"
+  ],
+  "intent": "trend",
+  "pattern": false
+ },
+ {
+  "id": "B20",
+  "question": "Give me a breakdown of yesterday's settlement fails by fail reason",
+  "sql": "SELECT s.fail_reason_code, s.fail_reason_text, COUNT(*) AS fails\nFROM fact_settlement s WHERE s.settlement_date = '{yesterday}' AND s.status = 'Failed'\nGROUP BY s.fail_reason_code, s.fail_reason_text ORDER BY fails DESC, s.fail_reason_code",
+  "tables": [
+   "fact_settlement"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "B21",
+  "question": "What are the three largest trades by value",
+  "sql": "SELECT t.txn_id, t.security_name, t.side, t.gross_amount, t.ccy, t.trade_date\nFROM fact_transaction t ORDER BY t.gross_amount DESC, t.txn_id LIMIT 3",
+  "tables": [
+   "fact_transaction"
+  ],
+  "intent": "lookup",
+  "pattern": false
+ },
+ {
+  "id": "B22",
+  "question": "Which fund earned the highest management fee revenue last month",
+  "sql": "SELECT f.fund_name, r.mgmt_fee_revenue, r.ccy FROM fact_revenue r JOIN dim_fund f ON r.fund_id = f.fund_id\nWHERE r.month = '{rev_cur}' ORDER BY r.mgmt_fee_revenue DESC, f.fund_name LIMIT 1",
+  "tables": [
+   "fact_revenue",
+   "dim_fund"
+  ],
+  "intent": "insight",
+  "pattern": false
+ },
+ {
+  "id": "B23",
+  "question": "What is the settlement rate by broker over the last 4 weeks",
+  "sql": "SELECT s.broker_name, ROUND(100.0 * SUM(s.status = 'Settled') / COUNT(*), 1) AS settlement_rate_pct, COUNT(*) AS trades\nFROM fact_settlement s WHERE s.settlement_date BETWEEN '{four_week_start}' AND '{as_of}'\nGROUP BY s.broker_name ORDER BY settlement_rate_pct ASC, s.broker_name",
+  "tables": [
+   "fact_settlement"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B24",
+  "question": "What is the combined USD-equivalent value of yesterday's failed settlements",
+  "sql": "SELECT ROUND(SUM(t.gross_amount * fx.usd_rate), 0) AS usd_equivalent_value, COUNT(*) AS fails\nFROM fact_settlement s JOIN fact_transaction t ON s.txn_id = t.txn_id\nJOIN dim_fx_rate fx ON fx.ccy = t.ccy AND fx.rate_date = '{as_of}'\nWHERE s.settlement_date = '{yesterday}' AND s.status = 'Failed'",
+  "tables": [
+   "fact_settlement",
+   "fact_transaction",
+   "dim_fx_rate"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B25",
+  "question": "Show the pending SLA records ordered by how close they are to the target",
+  "sql": "SELECT f.fund_name, s.process, s.pct_of_sla, s.target_minutes, s.elapsed_minutes\nFROM fact_sla s JOIN dim_fund f ON s.fund_id = f.fund_id\nWHERE s.status = 'Pending' ORDER BY s.pct_of_sla DESC, f.fund_name",
+  "tables": [
+   "fact_sla",
+   "dim_fund"
+  ],
+  "intent": "exception",
+  "pattern": false
+ },
+ {
+  "id": "B26",
+  "question": "What was the average cash percentage by fund over the last 4 weeks",
+  "sql": "SELECT f.fund_name, ROUND(AVG(c.cash_pct_aum), 2) AS avg_cash_pct\nFROM fact_cash_balance c JOIN dim_fund f ON c.fund_id = f.fund_id\nWHERE c.balance_date BETWEEN '{four_week_start}' AND '{as_of}' GROUP BY f.fund_name ORDER BY avg_cash_pct ASC",
+  "tables": [
+   "fact_cash_balance",
+   "dim_fund"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B27",
+  "question": "How many trades did each fund execute yesterday",
+  "sql": "SELECT f.fund_name, COUNT(*) AS trades, SUM(t.gross_amount) AS gross_value, t.ccy\nFROM fact_settlement s JOIN fact_transaction t ON s.txn_id = t.txn_id JOIN dim_fund f ON s.fund_id = f.fund_id\nWHERE s.settlement_date = '{yesterday}' GROUP BY f.fund_name, t.ccy ORDER BY trades DESC, f.fund_name",
+  "tables": [
+   "fact_settlement",
+   "fact_transaction",
+   "dim_fund"
+  ],
+  "intent": "kpi",
+  "pattern": false
+ },
+ {
+  "id": "B28",
+  "question": "Which funds had the same net flow in both months",
+  "sql": "SELECT f.fund_name, fl.net_flow, fl.ccy FROM fact_flows fl JOIN dim_fund f ON fl.fund_id = f.fund_id\nWHERE fl.month = '{current_month}' AND fl.net_flow = (SELECT p.net_flow FROM fact_flows p WHERE p.fund_id = fl.fund_id AND p.month = '{previous_month}')",
+  "tables": [
+   "fact_flows",
+   "dim_fund"
+  ],
+  "intent": "lookup",
+  "pattern": false
+ }
+]

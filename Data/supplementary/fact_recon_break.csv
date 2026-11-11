@@ -1,0 +1,25 @@
+break_id,fund_id,break_type,break_amount,ccy,age_days,status,owner,custodian,security_id,open_date,resolved_date,is_synthetic
+BRK101,F006,Cash,280000.0,GBP,4,Resolved,P. Nair,BNP Paribas Securities Svc,S11,2026-08-22,2026-08-26,1
+BRK102,F005,Position,980000.0,USD,8,Resolved,A. Menon,BNP Paribas Securities Svc,S02,2026-08-16,2026-08-24,1
+BRK103,F002,Cash,310000.0,EUR,6,Resolved,R. Alvarez,Northern Trust Custody,S03,2026-07-22,2026-07-28,1
+BRK104,F003,Cash,1140000.0,USD,2,Resolved,R. Alvarez,Northern Trust Custody,S03,2026-07-25,2026-07-27,1
+BRK105,F005,Cash,640000.0,USD,7,Resolved,M. Chen,Northern Trust Custody,S08,2026-07-21,2026-07-28,1
+BRK106,F005,Cash,360000.0,USD,4,Resolved,M. Chen,BNP Paribas Securities Svc,S05,2026-08-21,2026-08-25,1
+BRK107,F005,Cash,240000.0,USD,12,Resolved,R. Alvarez,Northern Trust Custody,S11,2026-08-22,2026-09-03,1
+BRK108,F006,Cash,1050000.0,GBP,12,Resolved,R. Alvarez,BNP Paribas Securities Svc,S06,2026-07-29,2026-08-10,1
+BRK109,F006,Cash,400000.0,GBP,2,Resolved,R. Alvarez,State Street Custody,S11,2026-08-10,2026-08-12,1
+BRK110,F005,Position,1070000.0,USD,5,Resolved,D. Osei,State Street Custody,S05,2026-08-03,2026-08-08,1
+BRK111,F006,Cash,690000.0,GBP,2,Resolved,R. Alvarez,Northern Trust Custody,S07,2026-07-27,2026-07-29,1
+BRK112,F001,Cash,920000.0,USD,11,Resolved,D. Osei,Northern Trust Custody,S11,2026-08-12,2026-08-23,1
+BRK113,F002,Cash,570000.0,EUR,4,Resolved,M. Chen,Northern Trust Custody,S03,2026-07-30,2026-08-03,1
+BRK114,F002,Cash,1130000.0,EUR,4,Resolved,S. Kulkarni,State Street Custody,S06,2026-08-16,2026-08-20,1
+BRK115,F002,Cash,370000.0,EUR,2,Resolved,D. Osei,BNP Paribas Securities Svc,S06,2026-07-30,2026-08-01,1
+BRK116,F003,Position,1020000.0,USD,3,Resolved,R. Alvarez,Northern Trust Custody,S05,2026-08-08,2026-08-11,1
+BRK117,F001,Position,980000.0,USD,3,Resolved,R. Alvarez,State Street Custody,S08,2026-07-31,2026-08-03,1
+BRK118,F006,Position,790000.0,GBP,1,Resolved,M. Chen,Northern Trust Custody,S01,2026-08-24,2026-08-25,1
+BRK119,F004,Position,150000.0,USD,7,Resolved,R. Alvarez,Northern Trust Custody,S05,2026-07-27,2026-08-03,1
+BRK120,F006,Position,660000.0,GBP,10,Resolved,D. Osei,Northern Trust Custody,S01,2026-08-02,2026-08-12,1
+BRK121,F001,Cash,520000.0,USD,12,Resolved,A. Menon,Northern Trust Custody,S06,2026-07-30,2026-08-11,1
+BRK122,F005,Cash,780000.0,USD,4,Resolved,R. Alvarez,BNP Paribas Securities Svc,S02,2026-07-27,2026-07-31,1
+BRK123,F002,Position,640000.0,EUR,9,Resolved,P. Nair,BNP Paribas Securities Svc,S06,2026-08-06,2026-08-15,1
+BRK124,F006,Cash,980000.0,GBP,7,Resolved,M. Chen,BNP Paribas Securities Svc,S10,2026-08-09,2026-08-16,1

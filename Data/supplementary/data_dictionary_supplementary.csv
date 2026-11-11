@@ -1,0 +1,30 @@
+table,column,type,key,description
+dim_date,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_nav,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_cash_balance,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_flows,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_revenue,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_recon_break,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_recon_break,resolved_date,DATE,,Date the break was resolved (synthetic history only)
+fact_flow_detail,flow_id,TEXT,PK,Flow detail record
+fact_flow_detail,fund_id,TEXT,FK dim_fund,Fund
+fact_flow_detail,trade_date,DATE,,Trade date
+fact_flow_detail,investor_type,TEXT,,Institutional / Retail
+fact_flow_detail,flow_type,TEXT,,Subscription / Redemption
+fact_flow_detail,amount,NUMBER,,"Flow amount (+ sub, - red)"
+fact_flow_detail,ccy,TEXT,,Fund currency
+fact_flow_detail,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+fact_sla_history,hist_id,TEXT,PK,SLA history record
+fact_sla_history,fund_id,TEXT,FK dim_fund,Fund
+fact_sla_history,process,TEXT,,Operational process
+fact_sla_history,target_minutes,NUMBER,,SLA target (min)
+fact_sla_history,elapsed_minutes,NUMBER,,Elapsed (min)
+fact_sla_history,pct_of_sla,NUMBER,,Elapsed as % of target
+fact_sla_history,status,TEXT,,Completed
+fact_sla_history,as_of_date,DATE,,Date of the SLA record
+fact_sla_history,breached,NUMBER,,1 if elapsed > target
+fact_sla_history,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"
+dim_fx_rate,rate_date,DATE,,Rate date
+dim_fx_rate,ccy,TEXT,,Currency
+dim_fx_rate,usd_rate,NUMBER,,USD per 1 unit of ccy (fixed synthetic rate)
+dim_fx_rate,is_synthetic,NUMBER,,"1 = synthetic demo-supplement row, 0 = original"

@@ -1,0 +1,392 @@
+{
+ "Q1": {
+  "ordered": true,
+  "columns": [
+   "fund_id",
+   "fund_name",
+   "region",
+   "strategy",
+   "aum_bn",
+   "base_ccy"
+  ],
+  "rows": [
+   [
+    "F001",
+    "MS Global Equity Alpha Fund",
+    "Global",
+    "Global Equity",
+    5.13,
+    "USD"
+   ],
+   [
+    "F004",
+    "MS US Core Bond Fund",
+    "US",
+    "Fixed Income",
+    3.05,
+    "USD"
+   ],
+   [
+    "F002",
+    "MS EMEA Fixed Income Fund",
+    "EMEA",
+    "Fixed Income",
+    2.35,
+    "EUR"
+   ],
+   [
+    "F003",
+    "MS Asia Multi-Asset Fund",
+    "APAC",
+    "Multi-Asset",
+    1.88,
+    "USD"
+   ],
+   [
+    "F006",
+    "MS Sustainable Global Credit Fund",
+    "Global",
+    "Credit",
+    1.45,
+    "GBP"
+   ],
+   [
+    "F005",
+    "MS Emerging Markets Equity Fund",
+    "Global",
+    "Emerging Equity",
+    1.02,
+    "USD"
+   ]
+  ]
+ },
+ "Q2": {
+  "ordered": true,
+  "columns": [
+   "fund_name",
+   "cash_pct_aum",
+   "available_balance",
+   "ccy"
+  ],
+  "rows": [
+   [
+    "MS US Core Bond Fund",
+    1.24,
+    37781074,
+    "USD"
+   ],
+   [
+    "MS EMEA Fixed Income Fund",
+    1.68,
+    39468085,
+    "EUR"
+   ]
+  ]
+ },
+ "Q3": {
+  "ordered": true,
+  "columns": [
+   "fund_name",
+   "security_name",
+   "asset_class",
+   "broker_name",
+   "fail_reason_code",
+   "fail_reason_text",
+   "value",
+   "ccy"
+  ],
+  "rows": [
+   [
+    "MS US Core Bond Fund",
+    "US Treasury 3.5% 2032",
+    "Government Bond",
+    "Helios Securities",
+    "LACK",
+    "Insufficient securities (short inventory)",
+    5240000,
+    "USD"
+   ],
+   [
+    "MS EMEA Fixed Income Fund",
+    "Meridian Corp 5.1% 2030",
+    "Corporate Bond",
+    "Helios Securities",
+    "LACK",
+    "Insufficient securities (short inventory)",
+    2990000,
+    "EUR"
+   ],
+   [
+    "MS Global Equity Alpha Fund",
+    "Apex Technologies Inc",
+    "Equity",
+    "Aurora Investment Bank",
+    "LATE",
+    "Late matching / after cut-off",
+    1720000,
+    "USD"
+   ],
+   [
+    "MS EMEA Fixed Income Fund",
+    "German Bund 2.3% 2034",
+    "Government Bond",
+    "Helios Securities",
+    "CMIS",
+    "Counterparty unmatched",
+    1640000,
+    "EUR"
+   ],
+   [
+    "MS US Core Bond Fund",
+    "Atlas Credit 4.8% 2031",
+    "Corporate Bond",
+    "Helios Securities",
+    "MISM",
+    "SSI mismatch (standing settlement instruction)",
+    1180000,
+    "USD"
+   ]
+  ]
+ },
+ "Q4": {
+  "ordered": true,
+  "columns": [
+   "rate_yesterday_pct",
+   "rate_4wk_avg_pct"
+  ],
+  "rows": [
+   [
+    85.7,
+    98.1
+   ]
+  ]
+ },
+ "Q4F": {
+  "ordered": true,
+  "columns": [
+   "broker_name",
+   "fails",
+   "fail_value"
+  ],
+  "rows": [
+   [
+    "Helios Securities",
+    4,
+    11050000
+   ],
+   [
+    "Aurora Investment Bank",
+    1,
+    1720000
+   ]
+  ]
+ },
+ "Q5": {
+  "ordered": true,
+  "columns": [
+   "break_id",
+   "fund_name",
+   "break_type",
+   "break_amount",
+   "ccy",
+   "age_days",
+   "owner",
+   "custodian"
+  ],
+  "rows": [
+   [
+    "BRK001",
+    "MS US Core Bond Fund",
+    "Position",
+    720000,
+    "USD",
+    13,
+    "R. Alvarez",
+    "State Street Custody"
+   ],
+   [
+    "BRK002",
+    "MS EMEA Fixed Income Fund",
+    "Cash",
+    940000,
+    "EUR",
+    9,
+    "M. Chen",
+    "BNP Paribas Securities Svc"
+   ],
+   [
+    "BRK003",
+    "MS US Core Bond Fund",
+    "Cash",
+    510000,
+    "USD",
+    8,
+    "R. Alvarez",
+    "State Street Custody"
+   ],
+   [
+    "BRK004",
+    "MS EMEA Fixed Income Fund",
+    "Cash",
+    720000,
+    "EUR",
+    6,
+    "M. Chen",
+    "BNP Paribas Securities Svc"
+   ]
+  ]
+ },
+ "Q6": {
+  "ordered": false,
+  "columns": [
+   "security_name",
+   "exception_type",
+   "stale_days",
+   "price_source",
+   "fund_name",
+   "nav_status",
+   "dod_variance_pct"
+  ],
+  "rows": [
+   [
+    "Bharat Infra Ltd",
+    "Missing",
+    3,
+    "Vendor A",
+    "MS Emerging Markets Equity Fund",
+    "Under Review",
+    0.81
+   ],
+   [
+    "Sakura Mobility Corp",
+    "Stale",
+    2,
+    "Vendor B",
+    "MS Asia Multi-Asset Fund",
+    "Final",
+    0.21
+   ],
+   [
+    "Helvetia Bank 6.0% 2033",
+    "Suspect",
+    2,
+    "Vendor A",
+    "MS EMEA Fixed Income Fund",
+    "Final",
+    -0.12
+   ]
+  ]
+ },
+ "Q7": {
+  "ordered": true,
+  "columns": [
+   "fund_name",
+   "net_flow_mtd",
+   "net_flow_prior",
+   "ccy"
+  ],
+  "rows": [
+   [
+    "MS Emerging Markets Equity Fund",
+    -135000000,
+    -25000000,
+    "USD"
+   ],
+   [
+    "MS EMEA Fixed Income Fund",
+    -110000000,
+    -10000000,
+    "EUR"
+   ],
+   [
+    "MS US Core Bond Fund",
+    10000000,
+    10000000,
+    "USD"
+   ],
+   [
+    "MS Asia Multi-Asset Fund",
+    20000000,
+    8000000,
+    "USD"
+   ],
+   [
+    "MS Sustainable Global Credit Fund",
+    75000000,
+    45000000,
+    "GBP"
+   ],
+   [
+    "MS Global Equity Alpha Fund",
+    110000000,
+    25000000,
+    "USD"
+   ]
+  ]
+ },
+ "Q8": {
+  "ordered": true,
+  "columns": [
+   "rev_2026",
+   "rev_2025",
+   "rev_yoy_pct",
+   "avg_aum_yoy_pct",
+   "fee_rate_2025",
+   "fee_rate_2026"
+  ],
+  "rows": [
+   [
+    3137500,
+    2762500,
+    13.6,
+    13.6,
+    0.75,
+    0.75
+   ]
+  ]
+ },
+ "Q9": {
+  "ordered": true,
+  "columns": [
+   "fund_name",
+   "process",
+   "pct_of_sla",
+   "status"
+  ],
+  "rows": [
+   [
+    "MS Asia Multi-Asset Fund",
+    "NAV Publication",
+    90,
+    "Pending"
+   ],
+   [
+    "MS US Core Bond Fund",
+    "Break Resolution",
+    86,
+    "Pending"
+   ]
+  ]
+ },
+ "Q10": {
+  "ordered": true,
+  "columns": [
+   "fund_name",
+   "attention_score"
+  ],
+  "rows": [
+   [
+    "MS EMEA Fixed Income Fund",
+    16
+   ],
+   [
+    "MS US Core Bond Fund",
+    13
+   ],
+   [
+    "MS Emerging Markets Equity Fund",
+    6
+   ]
+  ]
+ }
+}

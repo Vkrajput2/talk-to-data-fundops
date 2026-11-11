@@ -1,0 +1,13 @@
+security_id,isin,security_name,asset_class,ccy,issuer
+S01,US0378331005,Apex Technologies Inc,Equity,USD,Apex Technologies
+S02,US5949181045,Northwind Software Corp,Equity,USD,Northwind
+S03,DE0007236101,Rhein Industrie AG,Equity,EUR,Rhein Industrie
+S04,JP3436100006,Sakura Mobility Corp,Equity,JPY,Sakura Mobility
+S05,IN9021010012,Bharat Infra Ltd,Equity,INR,Bharat Infra
+S06,US912828AB12,US Treasury 3.5% 2032,Government Bond,USD,US Treasury
+S07,DE0001102606,German Bund 2.3% 2034,Government Bond,EUR,Bundesrepublik
+S08,XS2451178901,Meridian Corp 5.1% 2030,Corporate Bond,EUR,Meridian Corp
+S09,XS2005011900,Helvetia Bank 6.0% 2033,Corporate Bond,USD,Helvetia Bank
+S10,GB00BMGR2791,UK Gilt 4.25% 2036,Government Bond,GBP,UK DMO
+S11,US404280BF66,Atlas Credit 4.8% 2031,Corporate Bond,USD,Atlas Credit
+S12,FR0013409040,OAT 1.75% 2039,Government Bond,EUR,Agence France Tresor
